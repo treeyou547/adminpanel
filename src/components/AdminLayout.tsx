@@ -17,7 +17,9 @@ interface NavLinkItem {
 }
 
 export function AdminLayout() {
-  const [opened, { toggle }] = useDisclosure();
+  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
+  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+
   const navigate = useNavigate();
   const location = useLocation();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -60,14 +62,15 @@ export function AdminLayout() {
       navbar={{
         width: 300,
         breakpoint: 'sm',
-        collapsed: { mobile: !opened },
+        collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
       }}
       padding="md"
     >
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
           <Group>
-            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+            <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
+            <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
             <Title order={3}>Admin Panel</Title>
           </Group>
           <ActionIcon
@@ -102,7 +105,7 @@ export function AdminLayout() {
                       label={sub.label}
                       onClick={() => {
                         navigate(sub.path);
-                        if (opened) toggle();
+                        if (mobileOpened) toggleMobile();
                       }}
                     />
                   ))}
@@ -118,7 +121,7 @@ export function AdminLayout() {
                 leftSection={link.icon}
                 onClick={() => {
                   if (link.path) navigate(link.path);
-                  if (opened) toggle();
+                  if (mobileOpened) toggleMobile();
                 }}
               />
             );

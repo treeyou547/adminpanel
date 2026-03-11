@@ -1,13 +1,14 @@
-import { AppShell, Burger, Group, NavLink, Title, useMantineColorScheme, ActionIcon } from '@mantine/core';
+import { AppShell, Burger, Group, NavLink, Title, useMantineColorScheme, ActionIcon, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
   IconDashboard, IconUsers, IconSettings, IconSun, IconMoon,
-  IconFolder, IconChartBar, IconFileText, IconMail, IconCalendar,
-  IconMessage, IconBell, IconLock, IconShield, IconHelp,
-  IconBox, IconCreditCard
+  IconMap, IconMapPin, IconCategory, IconCalendarEvent,
+  IconBook, IconStar, IconTicket, IconShoppingBag, IconReportAnalytics, IconPhone,
+  IconChevronLeft, IconChevronRight, IconMenu2
 } from '@tabler/icons-react';
 import { ScrollArea } from '@mantine/core';
+import './AdminLayout.css';
 
 interface NavLinkItem {
   icon: React.ReactNode;
@@ -18,118 +19,137 @@ interface NavLinkItem {
 
 export function AdminLayout() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+  const [desktopCollapsed, { toggle: toggleDesktopCollapsed }] = useDisclosure(false);
 
   const navigate = useNavigate();
   const location = useLocation();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
   const links: NavLinkItem[] = [
-    { icon: <IconDashboard size="1rem" stroke={1.5} />, label: 'Dashboard', path: '/dashboard' },
-    { icon: <IconFolder size="1rem" stroke={1.5} />, label: 'Quotation', subLinks: [
-        { label: 'View Quotation', path: '/quotation/view' },
-        { label: 'Discount Approval', path: '/quotation/discount-approval' },
+    { icon: <IconDashboard size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Dashboard', path: '/dashboard' },
+    { icon: <IconUsers size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Users', path: '/users' },
+    { icon: <IconMap size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'State', path: '/state' },
+    { icon: <IconMap size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'City', path: '/city' },
+    { icon: <IconMapPin size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Venue', path: '/venue' },
+    { icon: <IconCategory size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Category', path: '/category' },
+    { icon: <IconCalendarEvent size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Event', path: '/event' },
+    { icon: <IconBook size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Blog', path: '/blog' },
+    { icon: <IconStar size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Event Sponsor', path: '/sponsor' },
+    { icon: <IconStar size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Our Client', path: '/client' },
+    { icon: <IconTicket size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Coupon Code', path: '/coupon' },
+    { icon: <IconShoppingBag size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Order', path: '/order' },
+    { icon: <IconReportAnalytics size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Sale Inventory Report', path: '/report' },
+    { icon: <IconPhone size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Contact Us', path: '/contact' },
+    { icon: <IconSettings size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Settings', subLinks: [
+        { label: 'App Settings', path: '/settings/app' },
+        { label: 'Popup Image', path: '/settings/popup' },
     ]},
-    { icon: <IconUsers size="1rem" stroke={1.5} />, label: 'Users', path: '/users' },
-    { icon: <IconBox size="1rem" stroke={1.5} />, label: 'Inventory', subLinks: [
-        { label: 'Stock Levels', path: '/inventory/stock' },
-        { label: 'Restock Orders', path: '/inventory/restock' },
-        { label: 'Suppliers', path: '/inventory/suppliers' },
-    ]},
-    { icon: <IconFileText size="1rem" stroke={1.5} />, label: 'Invoices', path: '/invoices' },
-    { icon: <IconCreditCard size="1rem" stroke={1.5} />, label: 'Payments', path: '/payments' },
-    { icon: <IconChartBar size="1rem" stroke={1.5} />, label: 'Reports', subLinks: [
-        { label: 'Sales Report', path: '/reports/sales' },
-        { label: 'Financial Report', path: '/reports/financial' },
-    ]},
-    { icon: <IconMail size="1rem" stroke={1.5} />, label: 'Email', path: '/email' },
-    { icon: <IconCalendar size="1rem" stroke={1.5} />, label: 'Calendar', path: '/calendar' },
-    { icon: <IconMessage size="1rem" stroke={1.5} />, label: 'Messages', path: '/messages' },
-    { icon: <IconBell size="1rem" stroke={1.5} />, label: 'Notifications', path: '/notifications' },
-    { icon: <IconLock size="1rem" stroke={1.5} />, label: 'Authentication', subLinks: [
-        { label: 'Sign In', path: '/auth/signin' },
-        { label: 'Sign Up', path: '/auth/signup' },
-        { label: 'Reset Password', path: '/auth/reset' },
-    ]},
-    { icon: <IconShield size="1rem" stroke={1.5} />, label: 'Roles & Permissions', path: '/roles' },
-    { icon: <IconHelp size="1rem" stroke={1.5} />, label: 'Help & Support', path: '/support' },
-    { icon: <IconSettings size="1rem" stroke={1.5} />, label: 'Settings', path: '/settings' },
   ];
 
   return (
     <AppShell
       header={{ height: 60 }}
       navbar={{
-        width: 300,
+        width: desktopCollapsed ? 80 : 250,
         breakpoint: 'sm',
-        collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
+        collapsed: { mobile: !mobileOpened },
       }}
       padding="md"
     >
-      <AppShell.Header>
+      <AppShell.Header style={{ backgroundColor: colorScheme === 'dark' ? '#1A1B1E' : '#fff', borderBottom: '1px solid #eee' }}>
         <Group h="100%" px="md" justify="space-between">
           <Group>
             <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
-            <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
-            <Title order={3}>Admin Panel</Title>
+            <ActionIcon variant="transparent" color="gray" onClick={toggleDesktopCollapsed} visibleFrom="sm" size="lg">
+              <IconMenu2 stroke={1.5} />
+            </ActionIcon>
+            <Title order={4} fw={400} c="dimmed">Dashboard</Title>
           </Group>
-          <ActionIcon
-            variant="default"
-            onClick={() => toggleColorScheme()}
-            size="lg"
-            aria-label="Toggle color scheme"
-          >
-            {colorScheme === 'dark' ? <IconSun size={18} /> : <IconMoon size={18} />}
-          </ActionIcon>
+          <Group>
+             <Text size="sm" c="blue" td="underline" style={{cursor: 'pointer'}}>Home</Text>
+             <Text size="sm" c="dimmed">/ {links.find(l => l.path === location.pathname)?.label || 'Dashboard'}</Text>
+             <ActionIcon
+              variant="default"
+              onClick={() => toggleColorScheme()}
+              size="lg"
+              aria-label="Toggle color scheme"
+              ml="md"
+            >
+              {colorScheme === 'dark' ? <IconSun size={18} /> : <IconMoon size={18} />}
+            </ActionIcon>
+          </Group>
         </Group>
       </AppShell.Header>
 
-      <AppShell.Navbar p="md">
-        <AppShell.Section grow component={ScrollArea}>
-          {links.map((link) => {
-            const hasActiveSub = link.subLinks?.some(sub => location.pathname === sub.path) || false;
+      <AppShell.Navbar className={`admin-navbar ${desktopCollapsed ? 'collapsed' : ''}`} p={0}>
+        <div className="admin-logo">
+           {desktopCollapsed ? (
+             <Text fw={700} c="white">F<span className="admin-logo-span">E</span></Text>
+           ) : (
+             <Text fw={700} c="white" fz="xl">Find E-<span className="admin-logo-span">Event</span></Text>
+           )}
+        </div>
 
-            if (link.subLinks) {
+        <AppShell.Section grow component={ScrollArea}>
+          <div style={{ padding: desktopCollapsed ? '8px 0' : '8px' }}>
+            {links.map((link) => {
+              const hasActiveSub = link.subLinks?.some(sub => location.pathname === sub.path) || false;
+
+              if (link.subLinks) {
+                return (
+                  <NavLink
+                    key={link.label}
+                    label={link.label}
+                    leftSection={link.icon}
+                    defaultOpened={hasActiveSub}
+                    className="admin-nav-link"
+                    childrenOffset={0}
+                  >
+                    {!desktopCollapsed && <div className="admin-submenu">
+                      {link.subLinks.map((sub) => (
+                        <NavLink
+                          key={sub.label}
+                          active={location.pathname === sub.path}
+                          label={sub.label}
+                          className="admin-nav-link"
+                          onClick={() => {
+                            navigate(sub.path);
+                            if (mobileOpened) toggleMobile();
+                          }}
+                        />
+                      ))}
+                    </div>}
+                  </NavLink>
+                );
+              }
+
               return (
                 <NavLink
                   key={link.label}
+                  active={location.pathname === link.path || (location.pathname === '/' && link.path === '/dashboard')}
                   label={link.label}
                   leftSection={link.icon}
-                  defaultOpened={hasActiveSub}
-                  childrenOffset={28}
-                >
-                  {link.subLinks.map((sub) => (
-                    <NavLink
-                      key={sub.label}
-                      active={location.pathname === sub.path}
-                      label={sub.label}
-                      onClick={() => {
-                        navigate(sub.path);
-                        if (mobileOpened) toggleMobile();
-                      }}
-                    />
-                  ))}
-                </NavLink>
+                  className="admin-nav-link"
+                  onClick={() => {
+                    if (link.path) navigate(link.path);
+                    if (mobileOpened) toggleMobile();
+                  }}
+                />
               );
-            }
-
-            return (
-              <NavLink
-                key={link.label}
-                active={location.pathname === link.path}
-                label={link.label}
-                leftSection={link.icon}
-                onClick={() => {
-                  if (link.path) navigate(link.path);
-                  if (mobileOpened) toggleMobile();
-                }}
-              />
-            );
-          })}
+            })}
+          </div>
         </AppShell.Section>
+
+        <button
+          className="admin-collapse-btn"
+          onClick={toggleDesktopCollapsed}
+          aria-label={desktopCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {desktopCollapsed ? <IconChevronRight size="1.2rem" /> : <IconChevronLeft size="1.2rem" />}
+        </button>
       </AppShell.Navbar>
 
-      <AppShell.Main>
+      <AppShell.Main style={{ backgroundColor: colorScheme === 'dark' ? '#1A1B1E' : '#f4f6f8' }}>
         <Outlet />
       </AppShell.Main>
     </AppShell>

@@ -5,7 +5,7 @@ import {
   IconDashboard, IconUsers, IconSettings, IconSun, IconMoon,
   IconMap, IconMapPin, IconCategory, IconCalendarEvent,
   IconBook, IconStar, IconTicket, IconShoppingBag, IconReportAnalytics, IconPhone,
-  IconChevronLeft, IconChevronRight, IconMenu2
+  IconChevronLeft, IconChevronRight, IconMenu2, IconChevronUp
 } from '@tabler/icons-react';
 import { ScrollArea } from '@mantine/core';
 import './AdminLayout.css';
@@ -90,8 +90,8 @@ export function AdminLayout() {
            )}
         </div>
 
-        <AppShell.Section grow component={ScrollArea}>
-          <div style={{ padding: desktopCollapsed ? '8px 0' : '8px' }}>
+        <AppShell.Section grow component={ScrollArea} type="always" scrollbars="y" className="admin-scroll-area">
+          <div style={{ padding: desktopCollapsed ? '8px 0' : '0' }}>
             {links.map((link) => {
               const hasActiveSub = link.subLinks?.some(sub => location.pathname === sub.path) || false;
 
@@ -104,6 +104,11 @@ export function AdminLayout() {
                     defaultOpened={hasActiveSub}
                     className="admin-nav-link"
                     childrenOffset={0}
+                    rightSection={
+                      !desktopCollapsed && (
+                        <IconChevronUp size="0.8rem" stroke={1.5} className="admin-nav-chevron" />
+                      )
+                    }
                   >
                     {!desktopCollapsed && <div className="admin-submenu">
                       {link.subLinks.map((sub) => (
@@ -111,7 +116,7 @@ export function AdminLayout() {
                           key={sub.label}
                           active={location.pathname === sub.path}
                           label={sub.label}
-                          className="admin-nav-link"
+                          className="admin-nav-link admin-nav-sublink"
                           onClick={() => {
                             navigate(sub.path);
                             if (mobileOpened) toggleMobile();

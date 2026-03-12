@@ -51,15 +51,12 @@ export function Sidebar({ mobileOpened, desktopCollapsed, toggleMobile, toggleDe
   return (
     <AppShell.Navbar className={`admin-navbar ${desktopCollapsed ? 'collapsed' : ''}`} p={0}>
       <div className="admin-logo">
-          {desktopCollapsed ? (
-            <Text fw={700} c="white">F<span className="admin-logo-span">E</span></Text>
-          ) : (
-            <Text fw={700} c="white" fz="xl">Find E-<span className="admin-logo-span">Event</span></Text>
-          )}
+          <Text fw={700} c="white" className="admin-logo-short">F<span className="admin-logo-span">E</span></Text>
+          <Text fw={700} c="white" fz="xl" className="admin-logo-full">Find E-<span className="admin-logo-span">Event</span></Text>
       </div>
 
       <AppShell.Section grow component={ScrollArea} type="always" scrollbars="y" className="admin-scroll-area">
-        <div style={{ padding: desktopCollapsed ? '8px 0' : '0' }}>
+        <div className="admin-nav-container">
           {links.map((link) => {
             const hasActiveSub = link.subLinks?.some(sub => location.pathname === sub.path) || false;
 
@@ -73,12 +70,10 @@ export function Sidebar({ mobileOpened, desktopCollapsed, toggleMobile, toggleDe
                   className="admin-nav-link"
                   childrenOffset={0}
                   rightSection={
-                    !desktopCollapsed && (
                       <IconChevronUp size="0.8rem" stroke={1.5} className="admin-nav-chevron" />
-                    )
                   }
                 >
-                  {!desktopCollapsed && <div className="admin-submenu">
+                  <div className="admin-submenu">
                     {link.subLinks.map((sub) => (
                       <NavLink
                         key={sub.label}
@@ -91,7 +86,7 @@ export function Sidebar({ mobileOpened, desktopCollapsed, toggleMobile, toggleDe
                         }}
                       />
                     ))}
-                  </div>}
+                  </div>
                 </NavLink>
               );
             }

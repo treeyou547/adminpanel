@@ -17,7 +17,7 @@ export function AdminLayout() {
     <AppShell
       header={{ height: 60 }}
       navbar={{
-        width: desktopCollapsed ? 80 : 250,
+        width: { base: 250, sm: desktopCollapsed ? 80 : 250 },
         breakpoint: 'sm',
         collapsed: { mobile: !mobileOpened },
       }}
@@ -33,8 +33,8 @@ export function AdminLayout() {
             <Title order={4} fw={400} c="dimmed">Dashboard</Title>
           </Group>
           <Group>
-             <Text size="sm" c="blue" td="underline" style={{cursor: 'pointer'}}>Home</Text>
-             <Text size="sm" c="dimmed" tt="capitalize">/ {location.pathname.replace('/', '') || 'Dashboard'}</Text>
+             <Text size="sm" c="blue" td="underline" visibleFrom="sm" style={{cursor: 'pointer'}}>Home</Text>
+             <Text size="sm" c="dimmed" tt="capitalize" visibleFrom="sm">/ {location.pathname.replace('/', '') || 'Dashboard'}</Text>
              <ActionIcon
               variant="default"
               onClick={() => toggleColorScheme()}

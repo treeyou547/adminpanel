@@ -1,20 +1,11 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { AdminLayout } from './components/AdminLayout';
-import { Dashboard } from './pages/Dashboard';
-import { Users } from './pages/Users';
-import { Settings } from './pages/Settings';
+import './App.css'
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<AdminLayout />}>
-        <Route index element={<Navigate to="/dashboard" replace />} />
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="users" element={<Users />} />
-        <Route path="settings" element={<Settings />} />
-      </Route>
-    </Routes>
-  );
+    <div>
+      <h1>Hello World</h1>
+    </div>
+  )
 }
 
-export default App;
+export default App

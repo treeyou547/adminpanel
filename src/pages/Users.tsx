@@ -1,73 +1,109 @@
-import { Table, Group, Text, ActionIcon, Menu, Stack, Paper, Badge } from '@mantine/core';
-import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
+import { useMemo } from 'react';
+import { Title, Table, Paper, Text, Badge, Group } from '@mantine/core';
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
 
-const users = [
-  { id: 1, name: 'Alice Johnson', email: 'alice@example.com', role: 'Admin', status: 'Active' },
-  { id: 2, name: 'Bob Smith', email: 'bob@example.com', role: 'User', status: 'Inactive' },
-  { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', role: 'Editor', status: 'Active' },
-  { id: 4, name: 'Diana Prince', email: 'diana@example.com', role: 'User', status: 'Active' },
-  { id: 5, name: 'Evan Wright', email: 'evan@example.com', role: 'User', status: 'Suspended' },
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: 'Active' | 'Inactive';
+};
+
+const DUMMY_DATA: User[] = [
+  { id: '1', name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active' },
+  { id: '2', name: 'Jane Smith', email: 'jane@example.com', role: 'Editor', status: 'Active' },
+  { id: '3', name: 'Bob Johnson', email: 'bob@example.com', role: 'Viewer', status: 'Inactive' },
+  { id: '4', name: 'Alice Williams', email: 'alice@example.com', role: 'Editor', status: 'Active' },
+  { id: '5', name: 'Charlie Brown', email: 'charlie@example.com', role: 'Viewer', status: 'Inactive' },
 ];
 
+const columnHelper = createColumnHelper<User>();
+
 export function Users() {
-  const rows = users.map((user) => (
-    <Table.Tr key={user.id}>
-      <Table.Td>{user.name}</Table.Td>
-      <Table.Td>{user.email}</Table.Td>
-      <Table.Td>{user.role}</Table.Td>
-      <Table.Td>
-        <Badge
-          color={user.status === 'Active' ? 'green' : user.status === 'Inactive' ? 'gray' : 'red'}
-          variant="light"
-        >
-          {user.status}
-        </Badge>
-      </Table.Td>
-      <Table.Td>
-        <Group gap={0} justify="flex-end">
-          <Menu
-            transitionProps={{ transition: 'pop' }}
-            withArrow
-            position="bottom-end"
-            withinPortal
-          >
-            <Menu.Target>
-              <ActionIcon variant="subtle" color="gray">
-                <IconDotsVertical size="1rem" stroke={1.5} />
-              </ActionIcon>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item leftSection={<IconEdit size="1rem" stroke={1.5} />}>
-                Edit User
-              </Menu.Item>
-              <Menu.Item leftSection={<IconTrash size="1rem" stroke={1.5} />} color="red">
-                Delete User
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </Group>
-      </Table.Td>
-    </Table.Tr>
-  ));
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor('id', {
+        header: 'ID',
+        cell: info => info.getValue(),
+      }),
+      columnHelper.accessor('name', {
+        header: 'Name',
+        cell: info => <Text fw={500}>{info.getValue()}</Text>,
+      }),
+      columnHelper.accessor('email', {
+        header: 'Email',
+        cell: info => info.getValue(),
+      }),
+      columnHelper.accessor('role', {
+        header: 'Role',
+        cell: info => info.getValue(),
+      }),
+      columnHelper.accessor('status', {
+        header: 'Status',
+        cell: info => {
+          const status = info.getValue();
+          return (
+            <Badge color={status === 'Active' ? 'green' : 'gray'} variant="light">
+              {status}
+            </Badge>
+          );
+        },
+      }),
+    ],
+    []
+  );
+
+  const table = useReactTable({
+    data: DUMMY_DATA,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
-    <Stack gap="lg">
-      <Text size="xl" fw={700}>Manage Users</Text>
+    <div>
+      <Group justify="space-between" mb="md">
+        <Title order={2}>Users</Title>
+      </Group>
 
-      <Paper withBorder radius="md" p="md">
-        <Table verticalSpacing="sm">
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Name</Table.Th>
-              <Table.Th>Email</Table.Th>
-              <Table.Th>Role</Table.Th>
-              <Table.Th>Status</Table.Th>
-              <Table.Th />
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
+      <Paper withBorder shadow="sm" radius="md">
+        <Table.ScrollContainer minWidth={500}>
+          <Table striped highlightOnHover verticalSpacing="sm">
+            <Table.Thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <Table.Tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <Table.Th key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </Table.Th>
+                  ))}
+                </Table.Tr>
+              ))}
+            </Table.Thead>
+            <Table.Tbody>
+              {table.getRowModel().rows.map((row) => (
+                <Table.Tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <Table.Td key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </Table.Td>
+                  ))}
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </Table.ScrollContainer>
       </Paper>
-    </Stack>
+    </div>
   );
 }

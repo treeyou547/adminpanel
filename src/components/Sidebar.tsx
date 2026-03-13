@@ -1,10 +1,9 @@
 import { AppShell, NavLink, Text } from '@mantine/core';
-import { ScrollArea } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   IconDashboard, IconUsers, IconSettings,
-  IconMap, IconMapPin, IconCategory, IconCalendarEvent,
-  IconBook, IconStar, IconTicket, IconShoppingBag, IconReportAnalytics, IconPhone,
+  IconMap, IconMapPin, IconLayoutGrid, IconCalendarEvent,
+  IconBook, IconStar, IconTicket, IconShoppingBag, IconClipboardData, IconPhone,
   IconChevronLeft, IconChevronRight, IconChevronUp
 } from '@tabler/icons-react';
 import './Sidebar.css';
@@ -33,14 +32,14 @@ export function Sidebar({ mobileOpened, desktopCollapsed, toggleMobile, toggleDe
     { icon: <IconMap size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'State', path: '/state' },
     { icon: <IconMap size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'City', path: '/city' },
     { icon: <IconMapPin size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Venue', path: '/venue' },
-    { icon: <IconCategory size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Category', path: '/category' },
+    { icon: <IconLayoutGrid size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Category', path: '/category' },
     { icon: <IconCalendarEvent size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Event', path: '/event' },
     { icon: <IconBook size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Blog', path: '/blog' },
     { icon: <IconStar size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Event Sponsor', path: '/sponsor' },
     { icon: <IconStar size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Our Client', path: '/client' },
     { icon: <IconTicket size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Coupon Code', path: '/coupon' },
     { icon: <IconShoppingBag size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Order', path: '/order' },
-    { icon: <IconReportAnalytics size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Sale Inventory Report', path: '/report' },
+    { icon: <IconClipboardData size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Sale Inventory Report', path: '/report' },
     { icon: <IconPhone size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Contact Us', path: '/contact' },
     { icon: <IconSettings size="1.2rem" stroke={1.5} className="admin-nav-icon" />, label: 'Settings', subLinks: [
         { label: 'App Settings', path: '/settings/app' },
@@ -55,7 +54,7 @@ export function Sidebar({ mobileOpened, desktopCollapsed, toggleMobile, toggleDe
           <Text fw={700} c="white" fz="xl" className="admin-logo-full">Find E-<span className="admin-logo-span">Event</span></Text>
       </div>
 
-      <AppShell.Section grow component={ScrollArea} type="always" scrollbars="y" className="admin-scroll-area">
+      <AppShell.Section grow className="admin-scroll-area">
         <div className="admin-nav-container">
           {links.map((link) => {
             const hasActiveSub = link.subLinks?.some(sub => location.pathname === sub.path) || false;

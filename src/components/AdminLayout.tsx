@@ -17,7 +17,7 @@ export function AdminLayout() {
     <AppShell
       header={{ height: 60 }}
       navbar={{
-        width: { base: 250, sm: desktopCollapsed ? 80 : 250 },
+        width: { base: 250, sm: desktopCollapsed ? 70 : 250 },
         breakpoint: 'sm',
         collapsed: { mobile: !mobileOpened },
       }}

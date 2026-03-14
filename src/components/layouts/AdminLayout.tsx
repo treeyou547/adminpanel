@@ -1,64 +1,82 @@
-import { AppShell, Burger, Group, Title, useMantineColorScheme, ActionIcon, Avatar, Menu, UnstyledButton, Text, Box } from '@mantine/core';
+import { AppShell, Burger, Group, Title, ActionIcon, useMantineColorScheme, TextInput, Menu, Avatar, Text, UnstyledButton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { IconSun, IconMoon, IconBell, IconSettings, IconLogout, IconUser } from '@tabler/icons-react';
 import { PremiumSidebar } from './PremiumSidebar';
+import { IconSun, IconMoonStars, IconSearch, IconBell, IconSettings, IconLogout, IconUser } from '@tabler/icons-react';
 
 export function AdminLayout() {
-  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
-
+  const [opened, { toggle }] = useDisclosure();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const navigate = useNavigate();
 
   return (
     <AppShell
-      header={{ height: 60 }}
+      header={{ height: 64 }}
       navbar={{
-        width: 260,
+        width: 280,
         breakpoint: 'sm',
-        collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
+        collapsed: { mobile: !opened },
       }}
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between" wrap="nowrap">
-          <Group wrap="nowrap">
-            <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
-            <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
-            <Box ml="md">
-              <Title order={3} fw={700} c="blue.6">NexGen Admin</Title>
-            </Box>
+        <Group h="100%" px="md" justify="space-between">
+          <Group>
+            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+            <ActionIcon variant="transparent" size="lg" color="primary">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+              </svg>
+            </ActionIcon>
+            <Title order={3} c="primary.7">NexGen Admin</Title>
           </Group>
 
-          <Group wrap="nowrap" gap="sm">
-            <ActionIcon variant="default" size="lg" aria-label="Notifications">
-              <IconBell stroke={1.5} size={20} />
+          <Group>
+            <TextInput
+              placeholder="Search..."
+              leftSection={<IconSearch size={16} />}
+              visibleFrom="sm"
+              w={300}
+              radius="md"
+            />
+
+            <ActionIcon variant="default" size="lg" radius="md">
+              <IconBell size={20} stroke={1.5} />
             </ActionIcon>
 
             <ActionIcon
               variant="default"
-              size="lg"
               onClick={() => toggleColorScheme()}
-              aria-label="Toggle color scheme"
+              size="lg"
+              radius="md"
             >
-              {colorScheme === 'dark' ? <IconSun stroke={1.5} size={20} /> : <IconMoon stroke={1.5} size={20} />}
+              {colorScheme === 'dark' ? (
+                <IconSun size={20} stroke={1.5} />
+              ) : (
+                <IconMoonStars size={20} stroke={1.5} />
+              )}
             </ActionIcon>
 
             <Menu shadow="md" width={200} position="bottom-end">
               <Menu.Target>
-                <UnstyledButton style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Avatar radius="xl" color="blue">AD</Avatar>
-                  <div style={{ display: 'none' }} className="user-details">
-                    <Text size="sm" fw={500}>Admin User</Text>
-                    <Text size="xs" c="dimmed">admin@nexgen.com</Text>
-                  </div>
+                <UnstyledButton>
+                  <Group gap={8}>
+                    <Avatar color="primary" radius="xl">AD</Avatar>
+                    <div style={{ display: 'none' }} className="user-details">
+                      <Text size="sm" fw={500}>Admin User</Text>
+                      <Text c="dimmed" size="xs">admin@nexgen.com</Text>
+                    </div>
+                  </Group>
                 </UnstyledButton>
               </Menu.Target>
 
               <Menu.Dropdown>
-                <Menu.Item leftSection={<IconUser size={14} />}>Profile</Menu.Item>
-                <Menu.Item leftSection={<IconSettings size={14} />}>Settings</Menu.Item>
+                <Menu.Item leftSection={<IconUser size={14} />} onClick={() => navigate('/profile')}>
+                  Profile
+                </Menu.Item>
+                <Menu.Item leftSection={<IconSettings size={14} />} onClick={() => navigate('/settings')}>
+                  Settings
+                </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item color="red" leftSection={<IconLogout size={14} />} onClick={() => navigate('/login')}>
                   Logout
@@ -69,11 +87,21 @@ export function AdminLayout() {
         </Group>
       </AppShell.Header>
 
-      <PremiumSidebar mobileOpened={mobileOpened} toggleMobile={toggleMobile} />
+      <AppShell.Navbar p="md">
+        <PremiumSidebar onClose={toggle} />
+      </AppShell.Navbar>
 
       <AppShell.Main bg={colorScheme === 'dark' ? 'dark.8' : 'gray.0'}>
         <Outlet />
       </AppShell.Main>
+
+      <style>{`
+        @media (min-width: 48em) {
+          .user-details {
+            display: block !important;
+          }
+        }
+      `}</style>
     </AppShell>
   );
 }

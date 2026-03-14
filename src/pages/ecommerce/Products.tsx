@@ -1,34 +1,32 @@
-import { Box, ActionIcon, Group, Badge, Avatar, Text } from '@mantine/core';
+import { Box, Badge, ActionIcon, Group, Text } from '@mantine/core';
 import { DataTable } from '../../components/common/DataTable';
 import { PageHeader } from '../../components/common/PageHeader';
-import { mockUsers } from '../../mock/data';
-import type { User } from '../../types';
+import { mockProducts } from '../../mock/data';
+import type { Product } from '../../types';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { useMemo } from 'react';
 
-export function Users() {
-  const columns = useMemo<ColumnDef<User>[]>(
+export function Products() {
+  const columns = useMemo<ColumnDef<Product>[]>(
     () => [
       {
-        header: 'User',
+        header: 'Product Name',
         accessorKey: 'name',
-        cell: ({ row }) => {
-          const user = row.original;
-          return (
-            <Group gap="sm">
-              <Avatar src={user.avatar} size={40} radius={40} />
-              <div>
-                <Text size="sm" fw={500}>{user.name}</Text>
-                <Text c="dimmed" size="xs">{user.email}</Text>
-              </div>
-            </Group>
-          );
-        },
+        cell: ({ row }) => <Text fw={500}>{row.original.name}</Text>,
       },
       {
-        header: 'Role',
-        accessorKey: 'role',
+        header: 'Category',
+        accessorKey: 'category',
+      },
+      {
+        header: 'Price',
+        accessorKey: 'price',
+        cell: ({ row }) => `$${row.original.price.toFixed(2)}`,
+      },
+      {
+        header: 'Stock',
+        accessorKey: 'stock',
       },
       {
         header: 'Status',
@@ -37,17 +35,13 @@ export function Users() {
           const status = row.original.status;
           return (
             <Badge
-              color={status === 'ACTIVE' ? 'teal' : status === 'PENDING' ? 'yellow' : 'gray'}
+              color={status === 'IN_STOCK' ? 'teal' : status === 'LOW_STOCK' ? 'orange' : 'red'}
               variant="light"
             >
-              {status}
+              {status.replace('_', ' ')}
             </Badge>
           );
         },
-      },
-      {
-        header: 'Last Active',
-        accessorKey: 'lastActive',
       },
       {
         header: 'Actions',
@@ -70,15 +64,16 @@ export function Users() {
   return (
     <Box>
       <PageHeader
-        title="User Management"
+        title="Products"
         breadcrumbs={[
           { title: 'Home', href: '/' },
-          { title: 'Users', href: '/users' },
+          { title: 'E-Commerce', href: '/products' },
+          { title: 'Products', href: '/products' },
         ]}
         withAction
-        actionLabel="Add User"
+        actionLabel="Add Product"
       />
-      <DataTable columns={columns} data={mockUsers} />
+      <DataTable columns={columns} data={mockProducts} />
     </Box>
   );
 }

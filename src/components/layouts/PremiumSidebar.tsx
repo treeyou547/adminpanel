@@ -1,107 +1,183 @@
-import { AppShell, NavLink, ScrollArea, ThemeIcon, Text } from '@mantine/core';
+import { NavLink, Text, ScrollArea, Box, Collapse, UnstyledButton, Group, ThemeIcon } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  IconDashboard, IconUsers, IconSettings, IconChartBar,
-  IconShoppingCart, IconFileInvoice, IconBox, IconUsersGroup
+  IconDashboard,
+  IconUsers,
+  IconSettings,
+  IconChartBar,
+  IconShoppingCart,
+  IconShieldLock,
+  IconUserCircle,
+  IconChevronRight
 } from '@tabler/icons-react';
-import './PremiumSidebar.css';
+import { useState } from 'react';
 
-interface NavLinkItem {
-  icon: React.ReactNode;
-  label: string;
-  path?: string;
-  color: string;
-  subLinks?: { label: string; path: string }[];
-}
+const mockLinks = [
+  { label: 'Overview', heading: true },
+  { icon: IconDashboard, label: 'Dashboard', link: '/' },
+  { icon: IconChartBar, label: 'Analytics', link: '/analytics' },
+  {
+    icon: IconShoppingCart,
+    label: 'E-Commerce',
+    initiallyOpened: true,
+    links: [
+      { label: 'Products', link: '/products' },
+      { label: 'Orders', link: '/orders' },
+      { label: 'Customers', link: '/crm' },
+    ],
+  },
+  { label: 'Management', heading: true },
+  { icon: IconUsers, label: 'Users', link: '/users' },
+  { icon: IconShieldLock, label: 'Roles', link: '/roles' },
+  { icon: IconSettings, label: 'Settings', link: '/settings' },
+  { icon: IconUserCircle, label: 'Profile', link: '/profile' },
+];
 
-interface SidebarProps {
-  mobileOpened: boolean;
-  toggleMobile: () => void;
-}
-
-export function PremiumSidebar({ mobileOpened, toggleMobile }: SidebarProps) {
+export function PremiumSidebar({ onClose }: { onClose: () => void }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const links: NavLinkItem[] = [
-    { icon: <IconDashboard size="1.2rem" stroke={1.5} />, label: 'Dashboard', path: '/dashboard', color: 'blue' },
-    { icon: <IconChartBar size="1.2rem" stroke={1.5} />, label: 'Analytics', path: '/analytics', color: 'grape' },
-    { icon: <IconShoppingCart size="1.2rem" stroke={1.5} />, label: 'E-Commerce', color: 'teal', subLinks: [
-      { label: 'Orders', path: '/orders' },
-      { label: 'Products', path: '/products' },
-      { label: 'Customers', path: '/customers' },
-    ]},
-    { icon: <IconFileInvoice size="1.2rem" stroke={1.5} />, label: 'Invoices', path: '/invoices', color: 'cyan' },
-    { icon: <IconUsers size="1.2rem" stroke={1.5} />, label: 'Users Management', path: '/users', color: 'indigo' },
-    { icon: <IconBox size="1.2rem" stroke={1.5} />, label: 'Inventory', path: '/inventory', color: 'orange' },
-    { icon: <IconUsersGroup size="1.2rem" stroke={1.5} />, label: 'Team', path: '/team', color: 'pink' },
-    { icon: <IconSettings size="1.2rem" stroke={1.5} />, label: 'Settings', path: '/settings', color: 'gray' },
-  ];
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    onClose();
+  };
+
+  const links = mockLinks.map((item, index) => {
+    if (item.heading) {
+      return (
+        <Text
+          key={`heading-${index}`}
+          size="xs"
+          fw={600}
+          c="dimmed"
+          tt="uppercase"
+          mt="md"
+          mb="xs"
+          px="md"
+        >
+          {item.label}
+        </Text>
+      );
+    }
+
+    if (item.links) {
+      return <LinksGroup key={item.label} {...item} onNavigate={handleNavigate} currentPath={location.pathname} />;
+    }
+
+    const isActive = location.pathname === item.link;
+
+    return (
+      <NavLink
+        key={item.label}
+        active={isActive}
+        label={<Text size="sm" fw={500}>{item.label}</Text>}
+        leftSection={
+          item.icon ? (
+            <ThemeIcon variant={isActive ? 'filled' : 'light'} size={30} color={isActive ? 'primary' : 'gray'}>
+              <item.icon size={18} />
+            </ThemeIcon>
+          ) : null
+        }
+        onClick={() => handleNavigate(item.link || '/')}
+        mb={4}
+        styles={(theme) => ({
+          root: {
+            borderRadius: theme.radius.md,
+            padding: '10px 16px',
+            backgroundColor: isActive ? 'var(--mantine-color-primary-0)' : 'transparent',
+            color: isActive ? 'var(--mantine-color-primary-7)' : 'var(--mantine-color-text)',
+            '&:hover': {
+              backgroundColor: isActive
+                ? 'var(--mantine-color-primary-1)'
+                : 'var(--mantine-color-gray-0)',
+            },
+          },
+        })}
+      />
+    );
+  });
 
   return (
-    <AppShell.Navbar p="md" className="premium-sidebar">
-      <AppShell.Section grow component={ScrollArea}>
-        <div className="nav-group">
-          <Text c="dimmed" size="xs" fw={700} tt="uppercase" mb="sm" mt="md" pl="md">Overview</Text>
-          {links.slice(0, 4).map((link) => renderLink(link, navigate, location, mobileOpened, toggleMobile))}
-
-          <Text c="dimmed" size="xs" fw={700} tt="uppercase" mb="sm" mt="xl" pl="md">Management</Text>
-          {links.slice(4).map((link) => renderLink(link, navigate, location, mobileOpened, toggleMobile))}
-        </div>
-      </AppShell.Section>
-    </AppShell.Navbar>
+    <ScrollArea h="calc(100vh - 80px)">
+      <Box pb="xl">{links}</Box>
+    </ScrollArea>
   );
 }
 
-function renderLink(link: NavLinkItem, navigate: any, location: any, mobileOpened: boolean, toggleMobile: () => void) {
-  const hasActiveSub = link.subLinks?.some(sub => location.pathname === sub.path) || false;
-  const isActive = location.pathname === link.path || (location.pathname === '/' && link.path === '/dashboard');
+interface LinksGroupProps {
+  icon: any;
+  label: string;
+  initiallyOpened?: boolean;
+  links?: { label: string; link: string }[];
+  onNavigate: (path: string) => void;
+  currentPath: string;
+}
 
-  const iconEl = (
-    <ThemeIcon variant="light" color={link.color} size={30} radius="md">
-      {link.icon}
-    </ThemeIcon>
-  );
+function LinksGroup({ icon: Icon, label, initiallyOpened, links, onNavigate, currentPath }: LinksGroupProps) {
+  const hasLinks = Array.isArray(links);
+  const [opened, setOpened] = useState(initiallyOpened || false);
+  const isActiveGroup = hasLinks ? links.some(l => currentPath === l.link || currentPath.startsWith(l.link + '/')) : false;
 
-  if (link.subLinks) {
+  const items = (hasLinks ? links : []).map((link) => {
+    const isActive = currentPath === link.link;
     return (
-      <NavLink
+      <Text<'a'>
+        component="a"
         key={link.label}
-        label={<Text fw={500} size="sm">{link.label}</Text>}
-        leftSection={iconEl}
-        defaultOpened={hasActiveSub}
-        className="premium-nav-link"
-        childrenOffset={44}
+        href={link.link}
+        onClick={(event) => {
+          event.preventDefault();
+          onNavigate(link.link);
+        }}
+        size="sm"
+        fw={isActive ? 600 : 500}
+        c={isActive ? 'primary' : 'dimmed'}
+        style={{
+          display: 'block',
+          textDecoration: 'none',
+          padding: '8px 24px 8px 52px',
+          backgroundColor: isActive ? 'var(--mantine-color-primary-0)' : 'transparent',
+          borderRadius: 'var(--mantine-radius-md)',
+          margin: '2px 0',
+        }}
       >
-        <div className="premium-submenu">
-          {link.subLinks.map((sub) => (
-            <NavLink
-              key={sub.label}
-              active={location.pathname === sub.path}
-              label={sub.label}
-              className="premium-nav-sublink"
-              onClick={() => {
-                navigate(sub.path);
-                if (mobileOpened) toggleMobile();
-              }}
-            />
-          ))}
-        </div>
-      </NavLink>
+        {link.label}
+      </Text>
     );
-  }
+  });
 
   return (
-    <NavLink
-      key={link.label}
-      active={isActive}
-      label={<Text fw={500} size="sm">{link.label}</Text>}
-      leftSection={iconEl}
-      className="premium-nav-link"
-      onClick={() => {
-        if (link.path) navigate(link.path);
-        if (mobileOpened) toggleMobile();
-      }}
-    />
+    <>
+      <UnstyledButton
+        onClick={() => setOpened((o) => !o)}
+        w="100%"
+        p="xs"
+        mb={4}
+        style={() => ({
+          borderRadius: 'var(--mantine-radius-md)',
+          backgroundColor: isActiveGroup ? 'var(--mantine-color-primary-0)' : 'transparent',
+        })}
+      >
+        <Group justify="space-between" gap={0} wrap="nowrap">
+          <Box style={{ display: 'flex', alignItems: 'center' }}>
+            <ThemeIcon variant={isActiveGroup ? 'filled' : 'light'} size={30} color={isActiveGroup ? 'primary' : 'gray'}>
+              <Icon size={18} />
+            </ThemeIcon>
+            <Box ml="md"><Text size="sm" fw={500} c={isActiveGroup ? 'primary' : undefined}>{label}</Text></Box>
+          </Box>
+          {hasLinks && (
+            <IconChevronRight
+              size={14}
+              stroke={1.5}
+              style={{
+                transform: opened ? `rotate(90deg)` : 'none',
+                transition: 'transform 200ms ease',
+              }}
+            />
+          )}
+        </Group>
+      </UnstyledButton>
+      {hasLinks ? <Collapse in={opened}>{items}</Collapse> : null}
+    </>
   );
 }

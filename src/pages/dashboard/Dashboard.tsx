@@ -1,88 +1,90 @@
-import { Grid, Paper, Title, Text, Group, SimpleGrid, ThemeIcon, Progress } from '@mantine/core';
+import { Card, Grid, Text, Title, Badge, Group, Avatar, Box } from '@mantine/core';
+import { PageHeader } from '../../components/common/PageHeader';
 import { AreaChart } from '@mantine/charts';
-import { IconArrowUpRight, IconCoin, IconUserPlus, IconShoppingCart, IconArrowDownRight } from '@tabler/icons-react';
+import { mockChartData, mockUsers } from '../../mock/data';
+import { IconDotsVertical, IconArrowUpRight, IconArrowDownRight } from '@tabler/icons-react';
 
 const statData = [
-  { title: 'Revenue', icon: IconCoin, value: '$13,456', diff: 34, color: 'teal' },
-  { title: 'New Users', icon: IconUserPlus, value: '4,145', diff: -13, color: 'red' },
-  { title: 'New Orders', icon: IconShoppingCart, value: '1,204', diff: 20, color: 'blue' },
-];
-
-const chartData = [
-  { date: 'Mar 22', revenue: 2890 },
-  { date: 'Mar 23', revenue: 2756 },
-  { date: 'Mar 24', revenue: 3322 },
-  { date: 'Mar 25', revenue: 3470 },
-  { date: 'Mar 26', revenue: 3129 },
-  { date: 'Mar 27', revenue: 3900 },
+  { title: 'Total Revenue', value: '$124,563.00', diff: 34, isPositive: true },
+  { title: 'Active Users', value: '45,302', diff: 12, isPositive: true },
+  { title: 'New Orders', value: '2,405', diff: -5, isPositive: false },
+  { title: 'Conversion Rate', value: '4.35%', diff: 2, isPositive: true },
 ];
 
 export function Dashboard() {
-  const stats = statData.map((stat) => {
-    const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
-
-    return (
-      <Paper withBorder p="md" radius="md" key={stat.title}>
-        <Group justify="space-between">
-          <Text size="xs" c="dimmed" fw={700} tt="uppercase">
-            {stat.title}
-          </Text>
-          <ThemeIcon color={stat.color} variant="light" size={38} radius="md">
-            <stat.icon size="1.8rem" stroke={1.5} />
-          </ThemeIcon>
-        </Group>
-
-        <Group align="flex-end" gap="xs" mt={25}>
-          <Text size="xl" fw={700}>
-            {stat.value}
-          </Text>
-          <Text c={stat.diff > 0 ? 'teal' : 'red'} fz="sm" fw={500} style={{ display: 'flex', alignItems: 'center' }}>
-            <span>{stat.diff}%</span>
-            <DiffIcon size="1rem" stroke={1.5} />
-          </Text>
-        </Group>
-
-        <Text fz="xs" c="dimmed" mt={7}>
-          Compared to previous month
-        </Text>
-      </Paper>
-    );
-  });
-
   return (
-    <div>
-      <Title order={2} mb="xl">Dashboard Overview</Title>
+    <Box>
+      <PageHeader
+        title="Dashboard Overview"
+        breadcrumbs={[
+          { title: 'Home', href: '/' },
+          { title: 'Dashboard', href: '/' },
+        ]}
+        withAction
+        actionLabel="Download Report"
+      />
 
-      <SimpleGrid cols={{ base: 1, sm: 3 }} mb="xl">
-        {stats}
-      </SimpleGrid>
+      <Grid mb="xl">
+        {statData.map((stat, i) => (
+          <Grid.Col span={{ base: 12, sm: 6, lg: 3 }} key={i}>
+            <Card padding="lg" radius="md">
+              <Group justify="space-between" mb="xs">
+                <Text size="xs" c="dimmed" fw={700} tt="uppercase">
+                  {stat.title}
+                </Text>
+                <IconDotsVertical size={16} stroke={1.5} color="var(--mantine-color-gray-5)" />
+              </Group>
+              <Group align="flex-end" gap="xs">
+                <Text size="xl" fw={700}>{stat.value}</Text>
+                <Text c={stat.isPositive ? 'teal' : 'red'} size="sm" fw={500}>
+                  <Group gap={4} wrap="nowrap">
+                    {stat.isPositive ? <IconArrowUpRight size={16} /> : <IconArrowDownRight size={16} />}
+                    <span>{Math.abs(stat.diff)}%</span>
+                  </Group>
+                </Text>
+              </Group>
+            </Card>
+          </Grid.Col>
+        ))}
+      </Grid>
 
       <Grid>
-        <Grid.Col span={{ base: 12, md: 8 }}>
-          <Paper withBorder p="md" radius="md">
-            <Title order={4} mb="lg">Revenue Growth</Title>
+        <Grid.Col span={{ base: 12, lg: 8 }}>
+          <Card padding="xl" radius="md">
+            <Title order={3} mb="xl">Revenue Growth</Title>
             <AreaChart
               h={300}
-              data={chartData}
+              data={mockChartData}
               dataKey="date"
-              series={[{ name: 'revenue', color: 'indigo.6' }]}
-              curveType="natural"
-              withGradient
+              series={[
+                { name: 'revenue', color: 'primary.6' },
+                { name: 'orders', color: 'teal.6' }
+              ]}
+              curveType="monotone"
             />
-          </Paper>
+          </Card>
         </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 4 }}>
-          <Paper withBorder p="md" radius="md" h="100%">
-            <Title order={4} mb="lg">Monthly Goals</Title>
-            <Text fz="sm" fw={500} mb="xs">Acquisition</Text>
-            <Progress value={65} color="blue" size="xl" radius="xl" mb="md" />
-            <Text fz="sm" fw={500} mb="xs">Retention</Text>
-            <Progress value={85} color="teal" size="xl" radius="xl" mb="md" />
-            <Text fz="sm" fw={500} mb="xs">Revenue Target</Text>
-            <Progress value={45} color="grape" size="xl" radius="xl" />
-          </Paper>
+
+        <Grid.Col span={{ base: 12, lg: 4 }}>
+          <Card padding="xl" radius="md" h="100%">
+            <Title order={3} mb="xl">Recent Users</Title>
+            {mockUsers.slice(0, 5).map(user => (
+              <Group justify="space-between" mb="sm" key={user.id}>
+                <Group>
+                  <Avatar src={user.avatar} radius="xl" />
+                  <div>
+                    <Text size="sm" fw={500}>{user.name}</Text>
+                    <Text size="xs" c="dimmed">{user.email}</Text>
+                  </div>
+                </Group>
+                <Badge variant="light" color={user.status === 'ACTIVE' ? 'teal' : 'gray'}>
+                  {user.status}
+                </Badge>
+              </Group>
+            ))}
+          </Card>
         </Grid.Col>
       </Grid>
-    </div>
+    </Box>
   );
 }

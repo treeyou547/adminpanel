@@ -27,10 +27,7 @@ export function Register() {
     validate: {
       name: (value) => (value.length < 2 ? 'Name must have at least 2 letters' : null),
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-      password: (value) =>
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/.test(value)
-          ? null
-          : 'Password must be at least 6 characters and include uppercase, lowercase, numbers and special characters',
+      password: (value) => (value.length < 6 ? 'Password must be at least 6 characters' : null),
       terms: (value) => (value ? null : 'You must accept terms and conditions'),
     },
   });

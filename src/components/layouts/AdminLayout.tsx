@@ -6,7 +6,6 @@ import { IconSun, IconMoonStars, IconSearch, IconBell, IconSettings, IconLogout,
 
 export function AdminLayout() {
   const [opened, { toggle }] = useDisclosure();
-  const [collapsed, { toggle: toggleCollapsed }] = useDisclosure(false);
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const navigate = useNavigate();
 
@@ -14,19 +13,16 @@ export function AdminLayout() {
     <AppShell
       header={{ height: 64 }}
       navbar={{
-        width: collapsed ? 80 : 280,
+        width: 280,
         breakpoint: 'sm',
         collapsed: { mobile: !opened },
       }}
       padding="md"
-      transitionDuration={300}
-      transitionTimingFunction="ease"
     >
-      <AppShell.Header>
+      <AppShell.Header className="glass-morphism-header" style={{ borderBottom: 'none' }}>
         <Group h="100%" px="md" justify="space-between">
           <Group>
-            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-            <Burger opened={!collapsed} onClick={toggleCollapsed} visibleFrom="sm" size="sm" />
+            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" color="var(--mantine-color-text)" />
             <ActionIcon variant="transparent" size="lg" color="primary">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
@@ -91,11 +87,11 @@ export function AdminLayout() {
         </Group>
       </AppShell.Header>
 
-      <AppShell.Navbar p="md" style={{ transition: 'width 300ms ease' }}>
-        <PremiumSidebar onClose={toggle} collapsed={collapsed} />
+      <AppShell.Navbar p="md" className="glass-morphism-nav" style={{ borderRight: 'none' }}>
+        <PremiumSidebar onClose={toggle} />
       </AppShell.Navbar>
 
-      <AppShell.Main bg={colorScheme === 'dark' ? 'dark.8' : 'gray.0'}>
+      <AppShell.Main bg="transparent">
         <Outlet />
       </AppShell.Main>
 

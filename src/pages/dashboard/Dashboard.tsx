@@ -1,5 +1,6 @@
-import { Card, Grid, Text, Title, Badge, Group, Avatar, Box } from '@mantine/core';
+import { Grid, Text, Title, Badge, Group, Avatar, Box } from '@mantine/core';
 import { PageHeader } from '../../components/common/PageHeader';
+import { GlassCard } from '../../components/common/GlassCard';
 import { AreaChart } from '@mantine/charts';
 import { mockChartData, mockUsers } from '../../mock/data';
 import { IconDotsVertical, IconArrowUpRight, IconArrowDownRight } from '@tabler/icons-react';
@@ -27,7 +28,7 @@ export function Dashboard() {
       <Grid mb="xl">
         {statData.map((stat, i) => (
           <Grid.Col span={{ base: 12, sm: 6, lg: 3 }} key={i}>
-            <Card padding="lg" radius="md">
+            <GlassCard p="lg">
               <Group justify="space-between" mb="xs">
                 <Text size="xs" c="dimmed" fw={700} tt="uppercase">
                   {stat.title}
@@ -43,14 +44,14 @@ export function Dashboard() {
                   </Group>
                 </Text>
               </Group>
-            </Card>
+            </GlassCard>
           </Grid.Col>
         ))}
       </Grid>
 
       <Grid>
         <Grid.Col span={{ base: 12, lg: 8 }}>
-          <Card padding="xl" radius="md">
+          <GlassCard p="xl">
             <Title order={3} mb="xl">Revenue Growth</Title>
             <AreaChart
               h={300}
@@ -62,11 +63,11 @@ export function Dashboard() {
               ]}
               curveType="monotone"
             />
-          </Card>
+          </GlassCard>
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, lg: 4 }}>
-          <Card padding="xl" radius="md" h="100%">
+          <GlassCard p="xl" h="100%">
             <Title order={3} mb="xl">Recent Users</Title>
             {mockUsers.slice(0, 5).map(user => (
               <Group justify="space-between" mb="sm" key={user.id}>
@@ -82,7 +83,7 @@ export function Dashboard() {
                 </Badge>
               </Group>
             ))}
-          </Card>
+          </GlassCard>
         </Grid.Col>
       </Grid>
     </Box>

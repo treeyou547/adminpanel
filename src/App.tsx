@@ -13,11 +13,30 @@ import { Register } from './pages/auth/Register';
 import { ForgotPassword } from './pages/auth/ForgotPassword';
 import { NotFound } from './pages/error/NotFound';
 import { Notifications } from '@mantine/notifications';
+import { useState, useEffect } from 'react';
+import { FullPageLoader } from './components/common/FullPageLoader';
 import '@mantine/notifications/styles.css';
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  // For development, we could skip the loader if needed, but for selling purposes we show it.
+  // We can use session storage so it only shows once per session.
+  useEffect(() => {
+    const hasLoaded = sessionStorage.getItem('app-initial-load');
+    if (hasLoaded) {
+      setLoading(false);
+    }
+  }, []);
+
+  const handleLoadingComplete = () => {
+    setLoading(false);
+    sessionStorage.setItem('app-initial-load', 'true');
+  };
+
   return (
     <>
+      {loading && <FullPageLoader onComplete={handleLoadingComplete} />}
       <Notifications position="top-right" />
       <Routes>
         <Route path="/login" element={<Login />} />

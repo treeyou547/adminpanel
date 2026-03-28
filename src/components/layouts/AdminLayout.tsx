@@ -38,9 +38,10 @@ export function AdminLayout() {
               visibleFrom="sm"
               w={300}
               radius="md"
+              className="glass-morphism-input"
             />
 
-            <ActionIcon variant="default" size="lg" radius="md">
+            <ActionIcon variant="default" size="lg" radius="md" className="glass-morphism-button">
               <IconBell size={20} stroke={1.5} />
             </ActionIcon>
 
@@ -49,6 +50,7 @@ export function AdminLayout() {
               onClick={() => toggleColorScheme()}
               size="lg"
               radius="md"
+              className="glass-morphism-button"
             >
               {colorScheme === 'dark' ? (
                 <IconSun size={20} stroke={1.5} />
@@ -91,7 +93,7 @@ export function AdminLayout() {
         <PremiumSidebar onClose={toggle} />
       </AppShell.Navbar>
 
-      <AppShell.Main bg="transparent">
+      <AppShell.Main bg="transparent" pt={80}>
         <Outlet />
       </AppShell.Main>
 

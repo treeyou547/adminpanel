@@ -29,14 +29,14 @@ export function Login() {
             label="Email"
             placeholder="you@nexgen.com"
             required
-            styles={{ input: { backgroundColor: 'var(--glass-bg)', borderColor: 'var(--glass-border)' } }}
+            className="glass-morphism-input"
           />
           <PasswordInput
             label="Password"
             placeholder="Your password"
             required
             mt="md"
-            styles={{ input: { backgroundColor: 'var(--glass-bg)', borderColor: 'var(--glass-border)' } }}
+            className="glass-morphism-input"
           />
           <Group justify="space-between" mt="lg">
             <Anchor component="button" size="sm" onClick={() => navigate('/forgot-password')}>

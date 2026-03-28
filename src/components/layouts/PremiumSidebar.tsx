@@ -80,19 +80,16 @@ export function PremiumSidebar({ onClose }: { onClose: () => void }) {
         }
         onClick={() => handleNavigate(item.link || '/')}
         mb={4}
-        className={isActive ? 'glass-morphism' : ''}
+        className={isActive ? 'glass-morphism' : 'glass-morphism-button'}
         styles={(theme) => ({
           root: {
             borderRadius: theme.radius.md,
             padding: '10px 16px',
             backgroundColor: isActive ? 'var(--glass-bg-hover)' : 'transparent',
             color: isActive ? 'var(--mantine-color-primary-filled)' : 'var(--mantine-color-text)',
-            backdropFilter: isActive ? 'blur(8px)' : 'none',
             border: isActive ? '1px solid var(--glass-border)' : '1px solid transparent',
             '&:hover': {
-              backgroundColor: isActive
-                ? 'var(--glass-bg-hover)'
-                : 'var(--glass-bg)',
+              backgroundColor: 'var(--glass-bg-hover)',
             },
           },
         })}

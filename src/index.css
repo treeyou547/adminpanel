@@ -1,10 +1,13 @@
 :root {
-  --glass-bg: rgba(255, 255, 255, 0.2);
-  --glass-bg-hover: rgba(255, 255, 255, 0.3);
-  --glass-border: rgba(255, 255, 255, 0.15);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-  --glass-blur: blur(16px);
+  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-bg-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+  --glass-bg-hover: rgba(255, 255, 255, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-border-gradient: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --glass-blur: blur(20px);
   --glass-radius: 16px;
+  --glass-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.6), inset 1px 0 1px rgba(255, 255, 255, 0.2);
 
   --mesh-gradient: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
   --mesh-gradient-light: radial-gradient(at 40% 20%, hsla(28,100%,74%,1) 0px, transparent 50%),
@@ -18,9 +21,12 @@
 
 [data-mantine-color-scheme="dark"] {
   --glass-bg: rgba(17, 25, 40, 0.45);
+  --glass-bg-gradient: linear-gradient(135deg, rgba(17, 25, 40, 0.6) 0%, rgba(17, 25, 40, 0.2) 100%);
   --glass-bg-hover: rgba(17, 25, 40, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-gradient: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  --glass-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.15), inset 1px 0 1px rgba(255, 255, 255, 0.05);
 }
 
 body {
@@ -42,15 +48,26 @@ body {
 }
 
 .glass-morphism {
-  background: var(--glass-bg) !important;
+  background: var(--glass-bg-gradient) !important;
   backdrop-filter: var(--glass-blur) !important;
   -webkit-backdrop-filter: var(--glass-blur) !important;
   border: 1px solid var(--glass-border) !important;
-  box-shadow: var(--glass-shadow) !important;
+  border-image: var(--glass-border-gradient) 1 !important;
+  border-image-slice: 1 !important;
+  box-shadow: var(--glass-shadow), var(--glass-highlight) !important;
+  /* Need border-radius to work with border-image, we fake it with overflow and border-image fallback */
+  border-image: none !important; /* disable border-image to keep radius */
+  border-top-color: rgba(255,255,255,0.4) !important;
+  border-left-color: rgba(255,255,255,0.4) !important;
+}
+
+[data-mantine-color-scheme="dark"] .glass-morphism {
+  border-top-color: rgba(255,255,255,0.15) !important;
+  border-left-color: rgba(255,255,255,0.15) !important;
 }
 
 .glass-morphism-nav {
-  background: var(--glass-bg) !important;
+  background: var(--glass-bg-gradient) !important;
   backdrop-filter: var(--glass-blur) !important;
   -webkit-backdrop-filter: var(--glass-blur) !important;
   border-right: 1px solid var(--glass-border) !important;
@@ -58,7 +75,7 @@ body {
 }
 
 .glass-morphism-header {
-  background: var(--glass-bg) !important;
+  background: var(--glass-bg-gradient) !important;
   backdrop-filter: var(--glass-blur) !important;
   -webkit-backdrop-filter: var(--glass-blur) !important;
   border-bottom: 1px solid var(--glass-border) !important;
@@ -66,13 +83,43 @@ body {
 }
 
 .glass-morphism-button {
-  background: var(--glass-bg) !important;
+  background: var(--glass-bg-gradient) !important;
   backdrop-filter: blur(4px) !important;
   -webkit-backdrop-filter: blur(4px) !important;
   border: 1px solid var(--glass-border) !important;
+  border-top-color: rgba(255,255,255,0.4) !important;
+  border-left-color: rgba(255,255,255,0.4) !important;
   transition: all 0.2s ease !important;
+  box-shadow: var(--glass-highlight) !important;
+}
+
+[data-mantine-color-scheme="dark"] .glass-morphism-button {
+  border-top-color: rgba(255,255,255,0.15) !important;
+  border-left-color: rgba(255,255,255,0.15) !important;
 }
 
 .glass-morphism-button:hover {
   background: var(--glass-bg-hover) !important;
+  transform: translateY(-1px);
+}
+
+.glass-morphism-input input {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: inherit !important;
+}
+
+[data-mantine-color-scheme="dark"] .glass-morphism-input input {
+  background: rgba(0, 0, 0, 0.2) !important;
+}
+
+.glass-morphism-input input:focus {
+  border-color: var(--mantine-color-primary-5) !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-mantine-color-scheme="dark"] .glass-morphism-input input:focus {
+  background: rgba(0, 0, 0, 0.4) !important;
 }

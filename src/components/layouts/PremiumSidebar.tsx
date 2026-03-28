@@ -8,7 +8,8 @@ import {
   IconShoppingCart,
   IconShieldLock,
   IconUserCircle,
-  IconChevronRight
+  IconChevronRight,
+  IconComponents
 } from '@tabler/icons-react';
 import { useState } from 'react';
 
@@ -24,6 +25,15 @@ const mockLinks = [
       { label: 'Products', link: '/products' },
       { label: 'Orders', link: '/orders' },
       { label: 'Customers', link: '/crm' },
+    ],
+  },
+  { label: 'Components', heading: true },
+  {
+    icon: IconComponents,
+    label: 'UI Components',
+    initiallyOpened: false,
+    links: [
+      { label: 'Data Table', link: '/components/table' },
     ],
   },
   { label: 'Management', heading: true },

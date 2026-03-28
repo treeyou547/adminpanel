@@ -12,6 +12,7 @@ import { Login } from './pages/auth/Login';
 import { Register } from './pages/auth/Register';
 import { ForgotPassword } from './pages/auth/ForgotPassword';
 import { NotFound } from './pages/error/NotFound';
+import { AdvancedTable } from './pages/components/AdvancedTable';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
 
@@ -33,6 +34,7 @@ function App() {
           <Route path="/crm" element={<CRM />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/components/table" element={<AdvancedTable />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

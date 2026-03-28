@@ -49,8 +49,8 @@ body {
 
 .glass-morphism {
   background: var(--glass-bg-gradient) !important;
-  backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
   border: 1px solid var(--glass-border) !important;
   border-image: var(--glass-border-gradient) 1 !important;
   border-image-slice: 1 !important;
@@ -68,16 +68,16 @@ body {
 
 .glass-morphism-nav {
   background: var(--glass-bg-gradient) !important;
-  backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
   border-right: 1px solid var(--glass-border) !important;
   box-shadow: var(--glass-shadow) !important;
 }
 
 .glass-morphism-header {
   background: var(--glass-bg-gradient) !important;
-  backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
   border-bottom: 1px solid var(--glass-border) !important;
   box-shadow: var(--glass-shadow) !important;
 }

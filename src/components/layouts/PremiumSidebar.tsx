@@ -147,7 +147,6 @@ function LinksGroup({ icon: Icon, label, initiallyOpened, links, onNavigate, cur
           textDecoration: 'none',
           padding: '8px 24px 8px 52px',
           backgroundColor: isActive ? 'var(--glass-bg-hover)' : 'transparent',
-          backdropFilter: isActive ? 'blur(4px)' : 'none',
           border: isActive ? '1px solid var(--glass-border)' : '1px solid transparent',
           borderRadius: 'var(--mantine-radius-md)',
           margin: '2px 0',
@@ -168,7 +167,6 @@ function LinksGroup({ icon: Icon, label, initiallyOpened, links, onNavigate, cur
         style={() => ({
           borderRadius: 'var(--mantine-radius-md)',
           backgroundColor: isActiveGroup ? 'var(--glass-bg-hover)' : 'transparent',
-          backdropFilter: isActiveGroup ? 'blur(4px)' : 'none',
           border: isActiveGroup ? '1px solid var(--glass-border)' : '1px solid transparent',
         })}
       >

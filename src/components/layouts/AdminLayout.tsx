@@ -19,7 +19,7 @@ export function AdminLayout() {
       }}
       padding="md"
     >
-      <AppShell.Header className="glass-morphism-header" style={{ borderBottom: 'none' }}>
+      <AppShell.Header className="glass-morphism-header" style={{ borderBottom: 'none', zIndex: 100 }}>
         <Group h="100%" px="md" justify="space-between">
           <Group>
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" color="var(--mantine-color-text)" />
@@ -89,7 +89,7 @@ export function AdminLayout() {
         </Group>
       </AppShell.Header>
 
-      <AppShell.Navbar p="md" className="glass-morphism-nav" style={{ borderRight: 'none' }}>
+      <AppShell.Navbar p="md" className="glass-morphism-nav" style={{ borderRight: 'none', zIndex: 99 }}>
         <PremiumSidebar onClose={toggle} />
       </AppShell.Navbar>
 

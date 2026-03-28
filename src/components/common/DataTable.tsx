@@ -19,13 +19,13 @@ interface DataTableProps<TData, TValue> {
   manualPagination?: boolean;
   pageCount?: number;
   pagination?: PaginationState;
-  onPaginationChange?: (updater: any) => void;
+  onPaginationChange?: (updater: import('@tanstack/react-table').Updater<PaginationState>) => void;
   globalFilter?: string;
   onGlobalFilterChange?: (value: string) => void;
   totalRecords?: number;
   enableExport?: boolean;
   exportFilename?: string;
-  exportData?: any[];
+  exportData?: TData[];
 }
 
 export function DataTable<TData, TValue>({

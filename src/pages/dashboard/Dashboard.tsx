@@ -37,12 +37,12 @@ export function Dashboard() {
               </Group>
               <Group align="flex-end" gap="xs">
                 <Text size="xl" fw={700}>{stat.value}</Text>
-                <Text c={stat.isPositive ? 'teal' : 'red'} size="sm" fw={500}>
+                <div style={{ color: stat.isPositive ? "var(--mantine-color-teal-6)" : "var(--mantine-color-red-6)", fontSize: "var(--mantine-font-size-sm)", fontWeight: 500 }}>
                   <Group gap={4} wrap="nowrap">
                     {stat.isPositive ? <IconArrowUpRight size={16} /> : <IconArrowDownRight size={16} />}
                     <span>{Math.abs(stat.diff)}%</span>
                   </Group>
-                </Text>
+                </div>
               </Group>
             </GlassCard>
           </Grid.Col>

@@ -36,8 +36,8 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <Box>
-      <Box style={{ overflowX: 'auto' }}>
+    <Box bg="var(--mantine-color-body)" style={{ borderRadius: 'var(--mantine-radius-md)', border: '1px solid var(--mantine-color-default-border)' }}>
+      <Box style={{ overflowX: 'auto', padding: '16px' }}>
         <Table verticalSpacing="sm" horizontalSpacing="md" striped highlightOnHover>
           <Table.Thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -119,7 +119,7 @@ export function DataTable<TData, TValue>({
 
       {/* Pagination */}
       {table.getPageCount() > 1 && (
-        <Group justify="space-between" mt="md" px="md">
+        <Group justify="space-between" mt="md" px="md" pb="md" style={{ borderTop: '1px solid var(--mantine-color-default-border)', paddingTop: '16px' }}>
           <Text size="sm" c="dimmed">
             Page {table.getState().pagination.pageIndex + 1} of{' '}
             {table.getPageCount()}

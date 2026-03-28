@@ -104,6 +104,9 @@ export function AdvancedTable() {
           setPagination(prev => ({ ...prev, pageIndex: 0 })); // Reset page when searching
         }}
         totalRecords={data?.totalRows}
+        enableExport
+        exportFilename="advanced_table_data"
+        exportData={data?.rows ?? []}
       />
     </Box>
   );

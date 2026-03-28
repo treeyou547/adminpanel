@@ -1,4 +1,4 @@
-import { Table, Group, Text, Pagination, Box, Loader, Center, Select, TextInput, LoadingOverlay } from '@mantine/core';
+import { Table, Group, Text, Pagination, Box, Loader, Center, Select, TextInput, LoadingOverlay, Menu, Button } from '@mantine/core';
 import {
   useReactTable,
   getCoreRowModel,
@@ -7,8 +7,9 @@ import {
   flexRender
 } from '@tanstack/react-table';
 import type { ColumnDef, SortingState, PaginationState } from '@tanstack/react-table';
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from '@tabler/icons-react';
+import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconDownload, IconFileSpreadsheet, IconFileText } from '@tabler/icons-react';
 import { useState } from 'react';
+import * as XLSX from 'xlsx';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -22,6 +23,9 @@ interface DataTableProps<TData, TValue> {
   globalFilter?: string;
   onGlobalFilterChange?: (value: string) => void;
   totalRecords?: number;
+  enableExport?: boolean;
+  exportFilename?: string;
+  exportData?: any[];
 }
 
 export function DataTable<TData, TValue>({
@@ -35,9 +39,23 @@ export function DataTable<TData, TValue>({
   onPaginationChange,
   globalFilter,
   onGlobalFilterChange,
-  totalRecords
+  totalRecords,
+  enableExport = false,
+  exportFilename = 'export_data',
+  exportData
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+
+  const handleExport = (format: 'csv' | 'xlsx') => {
+    const dataToExport = exportData || data;
+    if (!dataToExport || dataToExport.length === 0) return;
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+
+    XLSX.writeFile(workbook, `${exportFilename}.${format}`);
+  };
 
   const table = useReactTable({
     data,
@@ -59,16 +77,43 @@ export function DataTable<TData, TValue>({
   return (
     <Box bg="var(--mantine-color-body)" style={{ borderRadius: 'var(--mantine-radius-md)', border: '1px solid var(--mantine-color-default-border)', position: 'relative' }}>
       <LoadingOverlay visible={isFetching && !loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} loaderProps={{ color: 'primary', type: 'bars' }} />
-      {onGlobalFilterChange !== undefined && (
-        <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
-          <TextInput
-            placeholder="Search all columns..."
-            value={globalFilter ?? ''}
-            onChange={(e) => onGlobalFilterChange(e.currentTarget.value)}
-            leftSection={<IconSearch size={16} />}
-            w={{ base: '100%', sm: 300 }}
-          />
-        </Box>
+      {(onGlobalFilterChange !== undefined || enableExport) && (
+        <Group p="md" justify="space-between" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
+          {onGlobalFilterChange !== undefined ? (
+            <TextInput
+              placeholder="Search all columns..."
+              value={globalFilter ?? ''}
+              onChange={(e) => onGlobalFilterChange(e.currentTarget.value)}
+              leftSection={<IconSearch size={16} />}
+              w={{ base: '100%', sm: 300 }}
+            />
+          ) : <Box />}
+
+          {enableExport && (
+            <Menu shadow="md" width={200}>
+              <Menu.Target>
+                <Button variant="light" leftSection={<IconDownload size={16} />}>
+                  Export
+                </Button>
+              </Menu.Target>
+
+              <Menu.Dropdown>
+                <Menu.Item
+                  leftSection={<IconFileText size={14} />}
+                  onClick={() => handleExport('csv')}
+                >
+                  Export as CSV
+                </Menu.Item>
+                <Menu.Item
+                  leftSection={<IconFileSpreadsheet size={14} />}
+                  onClick={() => handleExport('xlsx')}
+                >
+                  Export as Excel
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          )}
+        </Group>
       )}
       <Box style={{ overflowX: 'auto', padding: '16px' }}>
         <Table verticalSpacing="sm" horizontalSpacing="md" striped highlightOnHover>
